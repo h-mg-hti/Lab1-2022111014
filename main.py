@@ -93,7 +93,7 @@ class TextGraph:
             print(f"✅ 图形文件已保存到: {output_file}")
 
         except Exception as e:
-            print(f"可视化失败: {e}")
+            print(f"failed: {e}")
 
     def query_bridge_words(self, word1: str, word2: str) -> str:
         """Find bridge words between two words"""
