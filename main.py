@@ -288,7 +288,7 @@ def main():
         print("2. Query bridge words")
         print("3. Generate new text")
         print("4. Calculate shortest path")
-        print("5. Calculate PageRank")
+        print("5. Calculate PageRank") # 可以选择tfidf进行优化
         print("6. Random walk")
         print("0. Exit")
 
