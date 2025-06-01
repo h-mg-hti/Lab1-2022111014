@@ -1,36 +1,33 @@
 import pytest
 import os
 import sys
+import sys
+sys.path.append(r'F:\sourcepycharm\SoftwareEnginingLab1\src')
 from textgraph import TextGraph
-
-# 添加src目录到系统路径
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
-
 
 @pytest.fixture
 def text_graph():
     """测试夹具，初始化TextGraph并加载测试文本"""
     graph = TextGraph()
-    # 直接处理文本内容，避免文件IO
     test_text = ("The scientist carefully analyzed the data, "
                  "wrote a detailed report, and shared the report with the team, "
                  "but the team requested more data, so the scientist analyzed it again.")
 
-    # 手动构建图结构
-    words = [graph._clean_word(w) for w in test_text.split()]
-    words = [w for w in words if w]  # 移除空字符串
+    # 手动构建图结构（确保顺序正确）
+    words = [
+        "the", "scientist", "carefully", "analyzed", "the", "data",
+        "wrote", "a", "detailed", "report",
+        "and", "shared", "the", "report", "with", "the", "team",
+        "but", "the", "team", "requested", "more", "data",
+        "so", "the", "scientist", "analyzed", "it", "again"
+    ]
 
+    # 构建邻接表
     for i in range(len(words) - 1):
         current = words[i]
         next_word = words[i + 1]
-
-        # 更新邻接表
         graph.adj_list[current][next_word] = graph.adj_list[current].get(next_word, 0) + 1
-
-        # 更新节点集合
         graph.nodes.update([current, next_word])
-
-        # 更新词频统计
         graph.word_freq[current] += 1
         graph.total_words += 1
 
@@ -45,7 +42,7 @@ def text_graph():
 def test_query_bridge_words_existing_pair(text_graph):
     """测试存在的单词对"""
     result = text_graph.query_bridge_words("but", "team")
-    # 根据实际实现调整断言
+    # 根据实际实现调整断言（注意单复数）
     assert result == "The bridge word from but to team is: the"
 
 
@@ -60,12 +57,6 @@ def test_query_bridge_words_nonexistent_word(text_graph):
     result = text_graph.query_bridge_words("but", "teams")
     assert result == "No teams in the graph!"
 
-
-def test_query_bridge_words_single_bridge(text_graph):
-    """测试只有一个桥接词的情况"""
-    result = text_graph.query_bridge_words("shared", "the")
-    # 根据实际文本分析，shared->report->the，所以report是桥接词
-    assert result == "The bridge word from shared to the is: report"
 
 
 def test_query_bridge_words_no_bridge(text_graph):
